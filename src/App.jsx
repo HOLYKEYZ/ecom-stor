@@ -25,15 +25,15 @@ export default function App() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    axios.get("/api/cart-items").then((response) => {
+    axios.get("https://backend-images-app.onrender.com/api//cart-items").then((response) => {
       setCart(response.data);
     });
   }, []);
 
   const addToCart = (productId, quantity = 1) => {
-    axios.post("/api/cart-items", { productId, quantity }).then(() => {
+    axios.post("https://backend-images-app.onrender.com/api//cart-items", { productId, quantity }).then(() => {
       // Refetch cart after adding
-      axios.get("/api/cart-items").then((response) => {
+      axios.get("https://backend-images-app.onrender.com/api//cart-items").then((response) => {
         setCart(response.data);
       });
     });

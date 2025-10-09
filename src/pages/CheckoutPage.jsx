@@ -22,8 +22,8 @@ export function CheckoutPage({ cart = [], setCart }) {
   const handleUpdateQuantity = async (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
     try {
-      await axios.put(`/api/cart-items/${cartItemId}`, { quantity: newQuantity });
-      const response = await axios.get("/api/cart-items");
+      await axios.put(`https://backend-images-app.onrender.com/api//cart-items/${cartItemId}`, { quantity: newQuantity });
+      const response = await axios.get("https://backend-images-app.onrender.com/api//cart-items");
       setCart(response.data);
     } catch (error) {
       console.error("Failed to update quantity:", error);
@@ -32,8 +32,8 @@ export function CheckoutPage({ cart = [], setCart }) {
 
   const handleRemoveItem = async (cartItemId) => {
     try {
-      await axios.delete(`/api/cart-items/${cartItemId}`);
-      const response = await axios.get("/api/cart-items");
+      await axios.delete(`https://backend-images-app.onrender.com/api//cart-items/${cartItemId}`);
+      const response = await axios.get("https://backend-images-app.onrender.com/api//cart-items");
       setCart(response.data);
     } catch (error) {
       console.error("Failed to remove item:", error);
@@ -43,13 +43,13 @@ export function CheckoutPage({ cart = [], setCart }) {
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
     try {
-      await axios.post("/api/orders", {
+      await axios.post("https://backend-images-app.onrender.com/api//orders", {
         items: cart,
         total: total.toFixed(2),
       });
       
       // Clear cart after successful order
-      await axios.delete("/api/cart-items/clear");
+      await axios.delete("https://backend-images-app.onrender.com/api//cart-items/clear");
       setCart([]);
       setOrderPlaced(true);
       

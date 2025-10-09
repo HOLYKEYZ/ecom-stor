@@ -11,7 +11,7 @@ export function HomePage({ cart, addToCart }) {
   useEffect(() => {
     console.log("Fetching products...");
     axios
-      .get("/api/products")
+      .get("https://backend-images-app.onrender.com/api//products")
       .then((response) => {
         console.log("Products received:", response.data);
         setProducts(response.data);

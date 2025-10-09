@@ -11,13 +11,13 @@ export default defineConfig({
     strictPort: true,
     open: false,
     proxy: {
-      "/api": {
-        target: "http://localhost:3000",
+      "https://backend-images-app.onrender.com/api/": {
+        target: "http://localhost:3000/",
         changeOrigin: true,
         secure: false,
       },
       "/images": {
-        target: "http://localhost:3000",
+        target: "http://localhost:3000/",
       },
     },
   },

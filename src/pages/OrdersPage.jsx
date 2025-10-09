@@ -8,7 +8,7 @@ export function OrdersPage() {
 
   useEffect(() => {
     axios
-      .get("/api/orders")
+      .get("https://backend-images-app.onrender.com/api//orders")
       .then((response) => {
         setOrders(response.data);
         setLoading(false);
