@@ -1,0 +1,325 @@
+.home-page {
+  width: 100%;
+}
+
+.home-page .products-grid {
+  display: grid;
+
+  /* - In CSS Grid, 1fr means a column will take up the
+       remaining space in the grid.
+     - If we write 1fr 1fr ... 1fr; 8 times, this will
+       divide the grid into 8 columns, each taking up an
+       equal amount of the space.
+     - repeat(8, 1fr); is a shortcut for repeating "1fr"
+       8 times (instead of typing out "1fr" 8 times).
+       repeat(...) is a special property that works with
+       display: grid; */
+  grid-template-columns: repeat(8, 1fr);
+}
+
+/* @media is used to create responsive design (making the
+   website look good on any screen size). This @media
+   means when the screen width is 2000px or less, we
+   will divide the grid into 7 columns instead of 8. */
+@media (max-width: 2000px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+}
+
+/* This @media means when the screen width is 1600px or
+   less, we will divide the grid into 6 columns. */
+@media (max-width: 1600px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 1300px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (max-width: 1000px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .home-page .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 450px) {
+  .home-page .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home-page .product-container {
+  padding-top: 40px;
+  padding-bottom: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+
+  border-right: 1px solid rgb(240, 240, 240);
+  border-bottom: 1px solid rgb(240, 240, 240);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.home-page .product-image-container {
+  display: block;
+  width: 100%;
+  min-height: 160px; /* adjust to your card design */
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+}
+
+.home-page .product-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 240px; /* optional limit so layout doesn't break */
+  object-fit: contain;
+  object-position: center;
+  margin: 0 auto;
+  -webkit-user-drag: none;
+  image-rendering: auto;
+}
+
+/* remove any accidental overlay hiding images */
+.product-image.hidden,
+.product-image[hidden] {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.home-page .product-name {
+  height: 40px;
+  margin-bottom: 5px;
+}
+
+.home-page .product-rating-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.home-page .product-rating-stars {
+  width: 100px;
+  margin-right: 6px;
+}
+
+.home-page .product-rating-count {
+  color: rgb(25, 135, 84);
+  cursor: auto;
+  margin-top: 3px;
+}
+
+.home-page .product-price {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.home-page .product-quantity-container {
+  margin-bottom: 17px;
+}
+
+.home-page .product-spacer {
+  flex: 1;
+}
+
+.home-page .added-to-cart {
+  color: rgb(25, 135, 84);
+  font-size: 16px;
+
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+
+  /* At first, the "Added to cart" message will
+     be invisible. Use JavaScript to change the
+     opacity and make it visible. */
+  opacity: 0;
+}
+
+.home-page .added-to-cart img {
+  height: 19px;
+  margin-right: 6px;
+}
+
+.home-page .add-to-cart-button {
+  width: 100%;
+  padding: 8px;
+  height: 34px;
+  margin-top: 1px;
+}
+
+/* container utility */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+/* hero */
+.hero {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: white;
+  margin-bottom: var(--spacing-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero p {
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.95;
+}
+
+/* featured products */
+.featured-products {
+  margin-top: var(--spacing-2xl);
+}
+
+.featured-products h2 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  margin-bottom: var(--spacing-xl);
+  text-align: center;
+  font-weight: 700;
+}
+
+/* buttons */
+.btn-primary {
+  background-color: white;
+  color: var(--primary);
+  padding: var(--spacing-md) var(--spacing-2xl);
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: var(--gray-50);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* products grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  align-items: stretch;
+  margin-top: var(--spacing-xl);
+}
+
+/* Responsive grid */
+@media (min-width: 1400px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+}
+
+/* Loading State */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  min-height: 300px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--gray-200);
+  border-top-color: var(--primary);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner p {
+  margin-top: var(--spacing-lg);
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}
+
+/* Error State */
+.error-message {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: var(--radius-lg);
+  margin: var(--spacing-xl) auto;
+  max-width: 600px;
+}
+
+.error-message p {
+  color: var(--error);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* No Products */
+.no-products {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+}

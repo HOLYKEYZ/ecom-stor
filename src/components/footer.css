@@ -1,0 +1,10 @@
+.site-footer {
+  background-color: rgb(8, 79, 45);
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.site-footer small {
+  font-size: 14px;
+}
