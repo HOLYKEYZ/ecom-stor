@@ -125,10 +125,6 @@
   position: relative;
 }
 
-.header .cart-icon {
-  width: 38px;
-}
-
 .header .cart-text {
   margin-left: 5px;
   font-size: 15px;
