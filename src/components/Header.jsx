@@ -27,7 +27,7 @@ export default function Header({ cart }) {
           <a href="#/checkout" className="cart-link">
             <img
               className="cart-icon"
-              src="/images/icons/cart.png"
+              src="https://img.icons8.com/?size=30&id=59997&format=png"
               alt="Cart"
             />
             <div className="cart-quantity">{totalQuantity}</div>
