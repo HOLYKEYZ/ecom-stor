@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="container">
         <small>
-          © {new Date().getFullYear()} SuperSimpleDev — All rights reserved.
+          © {new Date().getFullYear()} Ayanda Joseph — All rights reserved.
         </small>
       </div>
     </footer>

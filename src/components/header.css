@@ -125,9 +125,11 @@
   position: relative;
 }
 
-.header .cart-icon {
-  width: 38px;
-}
+/* 
+.header .cart-image {
+  width: 4px !important;
+  height:nt 2px !important;
+} */
 
 .header .cart-text {
   margin-left: 5px;
@@ -147,3 +149,4 @@
   width: 26px;
   text-align: center;
 }
+

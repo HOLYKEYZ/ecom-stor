@@ -11,7 +11,7 @@ export function HomePage({ cart, addToCart }) {
   useEffect(() => {
     console.log("Fetching products...");
     axios
-      .get("https://backend-images-app.onrender.com/api//products")
+      .get("https://backend-images-app.onrender.com/api/products")
       .then((response) => {
         console.log("Products received:", response.data);
         setProducts(response.data);
@@ -55,7 +55,6 @@ export function HomePage({ cart, addToCart }) {
         {error && (
           <div className="error-message">
             <p>Error loading products: {error}</p>
-            <p>Make sure the backend server is running on port 3000</p>
           </div>
         )}
         
