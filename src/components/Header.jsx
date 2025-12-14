@@ -1,6 +1,10 @@
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./header.css";
 
 export default function Header({ cart }) {
+  const { user, logout } = useAuth();
+  
   const totalQuantity = cart.reduce(
     (total, cartItem) => total + cartItem.quantity,
     0
@@ -9,22 +13,37 @@ export default function Header({ cart }) {
   return (
     <header className="site-header">
       <div className="header-inner container">
-        <a href="#/" className="brand-link" aria-label="Home">
+        <Link to="/" className="brand-link" aria-label="Home">
           AJ
-        </a>
+        </Link>
         <nav className="main-nav" aria-label="Main navigation">
-          <a href="#/" className="nav-link">
+          <Link to="/" className="nav-link">
             Home
-          </a>
-          <a href="#/orders" className="nav-link">
+          </Link>
+          <Link to="/orders" className="nav-link">
             Orders
-          </a>
-          <a href="#/checkout" className="nav-link">
-            Checkout
-          </a>
+          </Link>
+          
+          {user ? (
+            <div className="auth-nav">
+              <span className="user-greeting">Hi, {user.name}</span>
+              <button onClick={logout} className="nav-link btn-logout">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="auth-nav">
+              <Link to="/login" className="nav-link">
+                Login
+              </Link>
+              <Link to="/signup" className="nav-link">
+                Sign Up
+              </Link>
+            </div>
+          )}
         </nav>
         <div className="header-cart">
-          <a href="#/checkout" className="cart-link">
+          <Link to="/checkout" className="cart-link">
             <img
               className="cart-image"
               src="https://img.icons8.com/?size=30&id=59997&format=png"
@@ -32,7 +51,7 @@ export default function Header({ cart }) {
             />
             <div className="cart-quantity">{totalQuantity}</div>
             <div className="cart-text">Cart</div>
-          </a>
+          </Link>
         </div>
       </div>
     </header>

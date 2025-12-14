@@ -1,11 +1,12 @@
 import { useState } from "react";
-import axios from "axios";
-import "./checkout-header.css";
-import "./CheckoutPage.css";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/axios";
+import { TrashIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 
 export function CheckoutPage({ cart = [], setCart }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const navigate = useNavigate();
 
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => {
@@ -15,15 +16,14 @@ export function CheckoutPage({ cart = [], setCart }) {
   };
 
   const subtotal = calculateSubtotal();
-  const tax = subtotal * 0.1; // 10% tax
   const shipping = subtotal > 50 ? 0 : 9.99;
-  const total = subtotal + tax + shipping;
+  const total = subtotal + shipping; // Tax included in price for simplicity in this minimalist design
 
   const handleUpdateQuantity = async (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
     try {
-      await axios.put(`https://backend-images-app.onrender.com/api/cart-items/${cartItemId}`, { quantity: newQuantity });
-      const response = await axios.get("https://backend-images-app.onrender.com/api/cart-items");
+      await api.put(`/cart-items/${cartItemId}`, { quantity: newQuantity });
+      const response = await api.get("/cart-items");
       setCart(response.data);
     } catch (error) {
       console.error("Failed to update quantity:", error);
@@ -32,8 +32,8 @@ export function CheckoutPage({ cart = [], setCart }) {
 
   const handleRemoveItem = async (cartItemId) => {
     try {
-      await axios.delete(`https://backend-images-app.onrender.com/api/cart-items/${cartItemId}`);
-      const response = await axios.get("https://backend-images-app.onrender.com/api/cart-items");
+      await api.delete(`/cart-items/${cartItemId}`);
+      const response = await api.get("/cart-items");
       setCart(response.data);
     } catch (error) {
       console.error("Failed to remove item:", error);
@@ -43,22 +43,17 @@ export function CheckoutPage({ cart = [], setCart }) {
   const handlePlaceOrder = async () => {
     setIsProcessing(true);
     try {
-      await axios.post("https://backend-images-app.onrender.com/api/orders", {
+      await api.post("/orders", {
         items: cart,
         total: total.toFixed(2),
       });
-      
-      // Clear cart after successful order
-      await axios.delete("https://backend-images-app.onrender.com/api/cart-items/clear");
+      await api.delete("/cart-items/clear");
       setCart([]);
       setOrderPlaced(true);
-      
-      setTimeout(() => {
-        window.location.hash = "#/orders";
-      }, 2000);
+      setTimeout(() => navigate("/orders"), 2500);
     } catch (error) {
-      console.error("Failed to place order:", error);
-      alert("Failed to place order. Please try again.");
+      console.error("Failed order:", error);
+      alert("Something went wrong.");
     } finally {
       setIsProcessing(false);
     }
@@ -66,139 +61,109 @@ export function CheckoutPage({ cart = [], setCart }) {
 
   if (orderPlaced) {
     return (
-      <div className="checkout-page">
-        <div className="order-success">
-          <div className="success-icon">✓</div>
-          <h2>Order Placed Successfully!</h2>
-          <p>Thank you for your purchase. Redirecting to orders page...</p>
-        </div>
+      <div className="min-h-[80vh] flex flex-col items-center justify-center text-center px-4">
+        <h2 className="text-6xl font-black tracking-tighter mb-4">CONFIRMED.</h2>
+        <p className="text-neutral-500 mb-8 uppercase tracking-widest">Your order has been placed.</p>
+        <div className="w-16 h-1 bg-obsidian animate-pulse" />
       </div>
     );
   }
 
   if (cart.length === 0) {
     return (
-      <div className="checkout-page">
-        <div className="empty-cart">
-          <h2>Your Cart is Empty</h2>
-          <p>Add some items to your cart to checkout.</p>
-          <a href="#/" className="btn btn-primary">
-            Continue Shopping
-          </a>
-        </div>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center px-4">
+        <h2 className="text-4xl font-bold tracking-tighter mb-4 text-neutral-300">CART IS EMPTY</h2>
+        <Link to="/" className="btn-editorial">Start Shopping</Link>
       </div>
     );
   }
 
   return (
-    <div className="checkout-page">
-      <div className="checkout-header">
-        <div className="checkout-header-content">
-          <div>
-            <h1>Review Your Order</h1>
-            <p className="checkout-subtitle">
-              {cart.length} {cart.length === 1 ? "item" : "items"} in your cart
-            </p>
-          </div>
-          <a href="#/" className="btn-back-to-shop">
-            ← Back to Shop
-          </a>
-        </div>
-      </div>
+    <div className="max-w-[1600px] mx-auto px-6 py-12">
+      <h1 className="text-4xl font-black tracking-tighter mb-12 uppercase border-b border-concrete pb-4">Checkout</h1>
 
-      <div className="checkout-content">
-        <div className="cart-items-section">
-          <h2>Shopping Cart</h2>
-          <div className="cart-items-list">
-            {cart.map((item) => (
-              <div key={item.id} className="cart-item-card">
-                <div className="cart-item-image">
-                  <img
-                    src={item.Product?.image || "/images/placeholder.png"}
-                    alt={item.Product?.name || "Product"}
-                  />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-24">
+        {/* Left: Cart Items */}
+        <div className="lg:col-span-2 space-y-8">
+          {cart.map((item) => (
+            <div key={item.id} className="flex gap-6 items-start">
+              {/* Image */}
+              <div className="w-24 h-24 bg-vapor shrink-0">
+                <img
+                  src={item.Product?.image}
+                  alt={item.Product?.name}
+                  className="w-full h-full object-contain p-2 mix-blend-multiply"
+                />
+              </div>
+
+              {/* Details */}
+              <div className="flex-grow pt-1">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-bold uppercase tracking-tight text-lg">{item.Product?.name}</h3>
+                  <p className="font-medium tabular-nums">{item.Product?.price}</p>
                 </div>
-                <div className="cart-item-details">
-                  <h3>{item.Product?.name}</h3>
-                  <p className="cart-item-price">
-                    {item.Product?.price || "$0.00"}
-                  </p>
-                  <div className="cart-item-actions">
-                    <div className="quantity-controls">
-                      <button
-                        onClick={() =>
-                          handleUpdateQuantity(item.id, item.quantity - 1)
-                        }
-                        className="qty-btn"
-                        aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <span className="quantity-display">{item.quantity}</span>
-                      <button
-                        onClick={() =>
-                          handleUpdateQuantity(item.id, item.quantity + 1)
-                        }
-                        className="qty-btn"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="remove-btn"
+                
+                <div className="flex items-center gap-6 mt-4">
+                  <div className="flex items-center border border-concrete">
+                    <button 
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                      className="p-1 hover:bg-vapor"
                     >
-                      Remove
+                      <MinusIcon className="w-3 h-3" />
+                    </button>
+                    <span className="w-8 text-center text-sm font-mono">{item.quantity}</span>
+                    <button 
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                      className="p-1 hover:bg-vapor"
+                    >
+                      <PlusIcon className="w-3 h-3" />
                     </button>
                   </div>
-                </div>
-                <div className="cart-item-total">
-                  ${(
-                    parseFloat(item.Product?.price?.replace("$", "") || 0) *
-                    item.quantity
-                  ).toFixed(2)}
+                  
+                  <button 
+                    onClick={() => handleRemoveItem(item.id)}
+                    className="text-xs uppercase tracking-widest text-neutral-400 hover:text-red-600 transition-colors"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
-        <div className="order-summary-section">
-          <div className="order-summary-card">
-            <h2>Order Summary</h2>
-            <div className="summary-row">
-              <span>Subtotal:</span>
-              <span>${subtotal.toFixed(2)}</span>
+        {/* Right: Summary */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-24 bg-vapor p-8">
+            <h2 className="text-xl font-bold uppercase tracking-widest mb-8">Summary</h2>
+            
+            <div className="space-y-4 text-sm mb-8 border-b border-concrete pb-8">
+              <div className="flex justify-between text-neutral-500">
+                <span>Subtotal</span>
+                <span className="text-obsidian tabular-nums">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-neutral-500">
+                <span>Shipping</span>
+                <span className="text-obsidian tabular-nums">{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
+              </div>
             </div>
-            <div className="summary-row">
-              <span>Tax (10%):</span>
-              <span>${tax.toFixed(2)}</span>
+
+            <div className="flex justify-between items-end mb-8">
+              <span className="font-bold uppercase tracking-widest text-lg">Total</span>
+              <span className="text-3xl font-light tabular-nums">${total.toFixed(2)}</span>
             </div>
-            <div className="summary-row">
-              <span>Shipping:</span>
-              <span>{shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}</span>
-            </div>
-            {shipping === 0 && (
-              <p className="free-shipping-note">
-                🎉 You qualify for free shipping!
-              </p>
-            )}
-            <div className="summary-divider"></div>
-            <div className="summary-row summary-total">
-              <span>Total:</span>
-              <span>${total.toFixed(2)}</span>
-            </div>
-            <button
-              className="place-order-btn"
-              onClick={handlePlaceOrder}
+
+            <button 
+              onClick={handlePlaceOrder} 
               disabled={isProcessing}
+              className="w-full btn-editorial"
             >
               {isProcessing ? "Processing..." : "Place Order"}
             </button>
-            <a href="#/" className="continue-shopping-btn">
-              ← Continue Shopping
-            </a>
+            
+            <p className="mt-4 text-xs text-center text-neutral-400">
+              Secure Checkout • Free Returns
+            </p>
           </div>
         </div>
       </div>

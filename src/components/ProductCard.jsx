@@ -1,89 +1,66 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 export default function ProductCard({
   id,
   image,
   name,
-  rating = 5,
-  ratingCount = 0,
   price = 0,
   addToCart,
 }) {
-  const [quantity, setQuantity] = useState(1);
-  const [showAdded, setShowAdded] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   
-  // Format price correctly
   const formattedPrice = typeof price === 'number' 
     ? `$${(price / 100).toFixed(2)}` 
     : price;
 
-  const handleAddToCart = async () => {
-    setIsLoading(true);
+  const handleAddToCart = async (e) => {
+    e.preventDefault(); // Prevent navigation if clicked on add button
+    e.stopPropagation();
+    
+    setIsAdding(true);
     try {
-      await addToCart(id, quantity);
-      setShowAdded(true);
-      setTimeout(() => setShowAdded(false), 2000);
+      await addToCart(id, 1);
     } catch (error) {
       console.error("Failed to add to cart:", error);
     } finally {
-      setIsLoading(false);
+      setIsAdding(false);
     }
   };
 
   return (
-    <div className="product-container" key={id}>
-      <div className="product-image-container">
-        <img className="product-image" src={image} alt={name} />
-      </div>
-
-      <div className="product-name limit-text-to-2-lines">{name}</div>
-
-      <div className="product-rating-container">
-        <img
-          className="product-rating-stars"
-          src="/images/ratings/rating-45.png"
-          alt={`${rating} stars`}
-        />
-        <div className="product-rating-count link-primary">{ratingCount}</div>
-      </div>
-
-      <div className="product-price">{formattedPrice}</div>
-
-      <div className="product-quantity-container">
-        <label htmlFor={`quantity-${id}`} style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-          Qty:
-        </label>
-        <select
-          id={`quantity-${id}`}
-          value={quantity}
-          onChange={(e) => setQuantity(Number(e.target.value))}
-          aria-label={`Quantity for ${name}`}
-        >
-          {Array.from({ length: 10 }, (_, i) => (
-            <option key={i + 1} value={i + 1}>
-              {i + 1}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="product-spacer" />
-
-      {showAdded && (
-        <div className="added-to-cart show">
-          <img src="/images/icons/checkmark.png" alt="added" />
-          Added to Cart!
+    <div className="group relative">
+      <Link to={`/product/${id}`} className="block">
+        {/* Image Container */}
+        <div className="aspect-square w-full bg-vapor overflow-hidden relative">
+          <img 
+            src={image} 
+            alt={name} 
+            className="h-full w-full object-contain object-center group-hover:scale-105 transition-transform duration-700 ease-out p-8 mix-blend-multiply" 
+          />
+          
+          {/* Quick Add Overlay (Desktop) */}
+          <button
+            onClick={handleAddToCart}
+            disabled={isAdding}
+            className="absolute bottom-4 right-4 bg-obsidian text-white p-3 rounded-none opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-neutral-800 disabled:opacity-50"
+            aria-label="Quick Add"
+          >
+            <PlusIcon className="w-5 h-5" />
+          </button>
         </div>
-      )}
 
-      <button
-        className="add-to-cart-button button-primary"
-        onClick={handleAddToCart}
-        disabled={isLoading}
-      >
-        {isLoading ? "Adding..." : "Add to Cart"}
-      </button>
+        {/* Info */}
+        <div className="mt-4 flex justify-between items-start gap-4">
+          <h3 className="text-sm font-bold uppercase tracking-tight text-obsidian leading-snug">
+            {name}
+          </h3>
+          <p className="text-sm font-medium text-neutral-500 tabular-nums">
+            {formattedPrice}
+          </p>
+        </div>
+      </Link>
     </div>
   );
 }

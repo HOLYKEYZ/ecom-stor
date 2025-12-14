@@ -4,62 +4,23 @@
 
 .home-page .products-grid {
   display: grid;
-
-  /* - In CSS Grid, 1fr means a column will take up the
-       remaining space in the grid.
-     - If we write 1fr 1fr ... 1fr; 8 times, this will
-       divide the grid into 8 columns, each taking up an
-       equal amount of the space.
-     - repeat(8, 1fr); is a shortcut for repeating "1fr"
-       8 times (instead of typing out "1fr" 8 times).
-       repeat(...) is a special property that works with
-       display: grid; */
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem; /* Increased gap for breathing room */
 }
 
-/* @media is used to create responsive design (making the
-   website look good on any screen size). This @media
-   means when the screen width is 2000px or less, we
-   will divide the grid into 7 columns instead of 8. */
-@media (max-width: 2000px) {
-  .home-page .products-grid {
-    grid-template-columns: repeat(7, 1fr);
-  }
-}
-
-/* This @media means when the screen width is 1600px or
-   less, we will divide the grid into 6 columns. */
-@media (max-width: 1600px) {
-  .home-page .products-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-}
-
-@media (max-width: 1300px) {
-  .home-page .products-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
-@media (max-width: 1000px) {
-  .home-page .products-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
   .home-page .products-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 900px) {
   .home-page .products-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 500px) {
   .home-page .products-grid {
     grid-template-columns: 1fr;
   }
@@ -176,32 +137,57 @@
 }
 /* hero */
 .hero {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  background: radial-gradient(circle at top right, #4f46e5, transparent 40%),
+              radial-gradient(circle at bottom left, #06b6d4, transparent 40%),
+              #312e81;
+  background-size: 100% 100%;
   border-radius: var(--radius-xl);
-  padding: var(--spacing-2xl);
+  padding: 6rem 2rem;
   text-align: center;
   color: white;
   margin-bottom: var(--spacing-2xl);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .hero h1 {
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
+  font-size: clamp(3rem, 6vw, 4.5rem);
+  font-weight: 800;
   margin-bottom: var(--spacing-lg);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  line-height: 1.1;
+  background: linear-gradient(to right, #ffffff, #e0e7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.03em;
 }
 
 .hero p {
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  margin-bottom: var(--spacing-xl);
-  opacity: 0.95;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  margin-bottom: var(--spacing-2xl);
+  color: var(--primary-light);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
 }
 
 /* featured products */
