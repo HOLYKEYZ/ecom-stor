@@ -14,9 +14,8 @@ import { ProductDetailPage } from "./pages/ProductDetailPage";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
-// CSS - Only Tailwind now
-import "./index.css";
-import "./App.css"; 
+// CSS - Only Tailwind
+import "./index.css"; 
 
 export default function App() {
   const [cart, setCart] = useState([]);

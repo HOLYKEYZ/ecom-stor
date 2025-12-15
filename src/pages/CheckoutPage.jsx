@@ -10,14 +10,18 @@ export function CheckoutPage({ cart = [], setCart }) {
 
   const calculateSubtotal = () => {
     return cart.reduce((total, item) => {
-      const price = parseFloat(item.Product?.price?.replace("$", "") || 0);
-      return total + price * item.quantity;
+      // Handle potential string prices from backend "$10.00"
+      const price = typeof item.Product?.price === 'string' 
+        ? parseFloat(item.Product.price.replace(/[^0-9.]/g, '')) 
+        : item.Product?.price;
+        
+      return total + (price || 0) * item.quantity;
     }, 0);
   };
 
   const subtotal = calculateSubtotal();
   const shipping = subtotal > 50 ? 0 : 9.99;
-  const total = subtotal + shipping; // Tax included in price for simplicity in this minimalist design
+  const total = subtotal + shipping;
 
   const handleUpdateQuantity = async (cartItemId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -47,13 +51,13 @@ export function CheckoutPage({ cart = [], setCart }) {
         items: cart,
         total: total.toFixed(2),
       });
-      await api.delete("/cart-items/clear");
+      await api.delete("/cart-items/clear"); // Assuming backend has this, or handle loop
       setCart([]);
       setOrderPlaced(true);
       setTimeout(() => navigate("/orders"), 2500);
     } catch (error) {
       console.error("Failed order:", error);
-      alert("Something went wrong.");
+      alert("Something went wrong. Please try again.");
     } finally {
       setIsProcessing(false);
     }
@@ -100,21 +104,23 @@ export function CheckoutPage({ cart = [], setCart }) {
               <div className="flex-grow pt-1">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-bold uppercase tracking-tight text-lg">{item.Product?.name}</h3>
-                  <p className="font-medium tabular-nums">{item.Product?.price}</p>
+                  <p className="font-medium tabular-nums text-neutral-500">
+                    ${typeof item.Product?.price === 'string' ? item.Product.price.replace(/[^0-9.]/g, '') : item.Product?.price}
+                  </p>
                 </div>
                 
                 <div className="flex items-center gap-6 mt-4">
                   <div className="flex items-center border border-concrete">
                     <button 
                       onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                      className="p-1 hover:bg-vapor"
+                      className="p-1 hover:bg-vapor transition-colors"
                     >
                       <MinusIcon className="w-3 h-3" />
                     </button>
                     <span className="w-8 text-center text-sm font-mono">{item.quantity}</span>
                     <button 
                       onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                      className="p-1 hover:bg-vapor"
+                      className="p-1 hover:bg-vapor transition-colors"
                     >
                       <PlusIcon className="w-3 h-3" />
                     </button>

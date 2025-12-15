@@ -9,6 +9,7 @@ export function HomePage({ cart, addToCart }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Backend missing single product endpoint, fetching all
     api.get("/products")
       .then((response) => {
         setProducts(response.data);

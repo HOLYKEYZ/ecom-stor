@@ -83,11 +83,6 @@ export function OrdersPage() {
               </div>
               
             </div>
-            
-            {/* Mobile Action */}
-            <button className="md:hidden mt-4 w-full py-3 text-xs uppercase font-bold tracking-widest bg-white border border-concrete">
-              View Details
-            </button>
           </div>
         ))}
       </div>
